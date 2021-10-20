@@ -1,15 +1,28 @@
 package com.warriors.warriors.model;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name="characters")
 public class Character {
 
+    @Id
+    @GeneratedValue
     private int id;
+
+    @Column(name = "name", length = 30,nullable = false)
     private String name;
+
+    @Column(name = "type", length = 30, nullable = false)
     private String job;
 
     public Character(int id, String name, String job) {
         this.id = id;
         this.name = name;
         this.job = job;
+    }
+
+    public Character() {
     }
 
     public int getId() {

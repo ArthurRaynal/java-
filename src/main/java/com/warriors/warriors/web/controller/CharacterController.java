@@ -1,32 +1,29 @@
 package com.warriors.warriors.web.controller;
 
-import com.warriors.warriors.dao.CharacterDao;
+import com.warriors.warriors.dataBaseDao.CharacterDao2;
 import com.warriors.warriors.model.Character;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Optional;
 
 @RestController
 public class CharacterController {
 
     @Autowired
-    private CharacterDao characterDao;
+    private CharacterDao2 characterDao;
 
     @Operation(summary = "Get all characters")
-    @ApiResponse(responseCode = "200",description = "found the list")
     @RequestMapping(value = "/characters", method = RequestMethod.GET)
     public @ResponseBody
-    List<Character> characterList(){
+    Iterable<Character> characterList(){
         return characterDao.findAll();
     }
 
     @Operation(summary = "Get character by id")
     @GetMapping(value = "/characters/{id}")
-    public Character characterById(@PathVariable int id) {
+    public Optional<Character> characterById(@PathVariable int id) {
         return characterDao.findById(id);
     }
 
@@ -38,8 +35,9 @@ public class CharacterController {
 
     @Operation(summary = "Update character")
     @PutMapping(value = "/character/{id}")
-    public void updateCharacter(@RequestBody Character character, @PathVariable int id){
-        characterDao.update(character,id);
+    public Character updateCharacter(@RequestBody Character character, @PathVariable int id){
+        character.setId(id);
+        return characterDao.save(character);
     }
 
     @Operation(summary = "Delete character by id")
